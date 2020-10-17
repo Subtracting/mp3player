@@ -23,6 +23,8 @@ playIcon = pygame.image.load('play.png')
 pauseIcon = pygame.image.load('pause.png')
 stopIcon = pygame.image.load('stop.png')
 browseIcon = pygame.image.load('browse.png')
+volumeUp = pygame.image.load('volumeUp.png')
+volumeDown = pygame.image.load('volumeDown.png')
 
 pygame.display.set_icon(gameIcon)
 
@@ -32,7 +34,7 @@ GRAY = (100, 100, 100)
 
 file = 'unassigned'
 paused = False
-
+volume = 0.5
 
 def text_objects(text, font):
     textSurface = font.render(text, True, WHITE)
@@ -131,6 +133,16 @@ def select_file():
     play_song()
     root.destroy()
 
+def set_volume(n):
+    global volume
+    if n == 1:
+        if volume != 1.0:
+            volume += 0.1
+            pygame.mixer.music.set_volume(volume)
+    if n == 0:
+        if volume != 0.0:
+            volume -= 0.1
+            pygame.mixer.music.set_volume(volume)
 
 running = True
 
@@ -157,6 +169,8 @@ while running:
     pause_button = button(100, 20, pauseIcon)
     stop_button = button(30, 80, stopIcon)
     file_button = button(100, 80, browseIcon)
+    volume_button_up = button(540, 20, volumeUp)
+    volume_button_down = button(540, 60, volumeDown)
 
     # misc
     progress_bar()
@@ -186,6 +200,11 @@ while running:
                 stop_song()
             if file_button.collidepoint(event.pos):
                 select_file()
+            if volume_button_up.collidepoint(event.pos):
+                set_volume(1)
+            if volume_button_down.collidepoint(event.pos):
+                set_volume(0)
+
 
     pygame.display.update()
 
