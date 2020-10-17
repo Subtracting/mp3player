@@ -36,6 +36,7 @@ file = 'unassigned'
 paused = False
 volume = 0.5
 
+
 def text_objects(text, font):
     textSurface = font.render(text, True, WHITE)
     return textSurface, textSurface.get_rect()
@@ -46,6 +47,9 @@ def button(x, y, img=None):
 
 
 def progress_bar():
+    global songLength
+    global timer
+
     barPos = (250, 30)
     barSize = (250, 20)
     borderColor = (255, 255, 255)
@@ -73,6 +77,10 @@ def progress_bar():
         innerPos = (barPos[0]+3, barPos[1]+3)
         innerSize = ((barSize[0]-6) * progress, barSize[1]-6)
         pygame.draw.rect(screen, barColor, (*innerPos, *innerSize))
+
+
+def progress_location():
+    return pygame.Rect(250, 30, 250, 20)
 
 
 def playtime():
@@ -133,6 +141,7 @@ def select_file():
     play_song()
     root.destroy()
 
+
 def set_volume(n):
     global volume
     if n == 1:
@@ -143,6 +152,7 @@ def set_volume(n):
         if volume != 0.0:
             volume -= 0.1
             pygame.mixer.music.set_volume(volume)
+
 
 running = True
 
@@ -161,6 +171,7 @@ else:
 
 # main loop
 while running:
+    global timer
     screen.fill(BLACK)
     timer = pygame.mixer.music.get_pos() + timer_last*1000
 
@@ -173,6 +184,7 @@ while running:
     volume_button_down = button(540, 60, volumeDown)
 
     # misc
+    prog_loc = progress_location()
     progress_bar()
     playtime()
     playing()
@@ -204,7 +216,13 @@ while running:
                 set_volume(1)
             if volume_button_down.collidepoint(event.pos):
                 set_volume(0)
-
+            if prog_loc.collidepoint(event.pos):
+                timer = ((event.pos[0]-250)/250) * songLength
+                try:
+                    pygame.mixer.music.play(1, timer)
+                    print("skipped to " + str(timer))
+                except:
+                    pass
 
     pygame.display.update()
 
