@@ -77,11 +77,13 @@ def progress_bar():
 
 def playtime():
     msg = str(datetime.timedelta(seconds=int(round(timer/1000))))
-    smallText2 = pygame.font.SysFont("helvetica", 20)
+    if is_prime(int(round(timer/1000))):
+        smallText2 = pygame.font.SysFont("helvetica", 20, 1, 1)
+    else:
+        smallText2 = pygame.font.SysFont("helvetica", 20)
     textSurf2, textRect2 = text_objects(msg, smallText2)
     textRect2.midleft = (250, 80)
     screen.blit(textSurf2, textRect2)
-
 
 def playing():
     msg = "playing song: " + str(str(file).split("/")[-1])
@@ -131,6 +133,7 @@ def select_file():
         ("mp3 files", "*.mp3"), ("flac-elackjes", "*.flac"), ("All files", "*.*")))
     stop_song()
     play_song()
+    number_is_prime()
     root.destroy()
 
 def set_volume(n):
@@ -143,6 +146,25 @@ def set_volume(n):
         if volume != 0.0:
             volume -= 0.1
             pygame.mixer.music.set_volume(volume)
+
+def number_is_prime():
+    global file
+    song = MP3(file)
+    songLength = int(song.info.length)
+    if is_prime(songLength):
+        msg = ("Number is prime, yesss!")
+    else:
+        msg = ("Number is not prime, noooo!")
+    smallText2 = pygame.font.SysFont("helvetica", 10)
+    textSurf2, textRect2 = text_objects(msg, smallText2)
+    textRect2.midleft = (250, 135)
+    screen.blit(textSurf2, textRect2)
+
+def is_prime(n):
+    for i in range(2,int(n**0.5)+1):
+        if n%i==0:
+            return False     
+    return True
 
 running = True
 
@@ -175,6 +197,7 @@ while running:
     # misc
     progress_bar()
     playtime()
+    number_is_prime()
     playing()
 
     # quit check
