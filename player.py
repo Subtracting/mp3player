@@ -5,7 +5,7 @@ from mp3db import *
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
 import datetime
-# test
+
 # database connection
 conn = create_connection('mp3_db.sqlite')
 
@@ -39,30 +39,8 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
 
 
-def button(msg, x, y, w, h, ic, ac, action=None, img=None):
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-
-    if img != None:
-        if x+w > mouse[0] > x and y+h > mouse[1] > y:
-            screen.blit(img, (x, y))
-            if click[0] == 1 and action != None:
-                action()
-        else:
-            screen.blit(img, (x, y))
-    else:
-        if x+w > mouse[0] > x and y+h > mouse[1] > y:
-            pygame.draw.rect(screen, ac, (x, y, w, h))
-
-            if click[0] == 1 and action != None:
-                action()
-        else:
-            pygame.draw.rect(screen, ic, (x, y, w, h))
-
-        smallText = pygame.font.SysFont("helvetica", 20)
-        textSurf, textRect = text_objects(msg, smallText)
-        textRect.center = ((x+(w/2)), (y+(h/2)))
-        screen.blit(textSurf, textRect)
+def button(x, y, img=None):
+    return screen.blit(img, (x, y))
 
 
 def progress_bar():
@@ -149,9 +127,9 @@ def select_file():
     root.withdraw()
     file = filedialog.askopenfilename(filetypes=(
         ("mp3 files", "*.mp3"), ("flac-elackjes", "*.flac"), ("All files", "*.*")))
-    root.destroy()
     stop_song()
     play_song()
+    root.destroy()
 
 
 running = True
@@ -168,21 +146,17 @@ if last_time != () and last_time[1] != 'unassigned' and last_time[0] != '-1':
 else:
     timer_last = 0
 
+
 # main loop
 while running:
     screen.fill(BLACK)
-    events = pygame.event.get()
     timer = pygame.mixer.music.get_pos() + timer_last*1000
 
     # buttons
-    play_button = button('play', 30, 20, 60, 30,
-                         GRAY, WHITE, play_song, playIcon)
-    pause_button = button('pause', 100, 20, 60,
-                          30, GRAY, WHITE, pause_song, pauseIcon)
-    stop_button = button('stop', 30, 80, 60, 30,
-                         GRAY, WHITE, stop_song, stopIcon)
-    file_button = button('browse', 100, 80, 80, 30,
-                         GRAY, WHITE, select_file, browseIcon)
+    play_button = button(30, 20, playIcon)
+    pause_button = button(100, 20, pauseIcon)
+    stop_button = button(30, 80, stopIcon)
+    file_button = button(100, 80, browseIcon)
 
     # misc
     progress_bar()
@@ -190,7 +164,7 @@ while running:
     playing()
 
     # quit check
-    for event in events:
+    for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
 
@@ -200,6 +174,18 @@ while running:
 
             pygame.mixer.quit()
             running = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+
+            # If the button collides with the mouse position.
+            if play_button.collidepoint(event.pos):
+                play_song()
+            if pause_button.collidepoint(event.pos):
+                pause_song()
+            if stop_button.collidepoint(event.pos):
+                stop_song()
+            if file_button.collidepoint(event.pos):
+                select_file()
 
     pygame.display.update()
 
