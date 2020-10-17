@@ -13,12 +13,17 @@ conn = create_connection('mp3_db.sqlite')
 pygame.init()
 pygame.mixer.init()
 
-screen_width, screen_height = (600, 200)
+screen_width, screen_height = (600, 150)
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('2 DA MAXXX')
 pygame.event.pump()
 
 gameIcon = pygame.image.load('icon.png')
+playIcon = pygame.image.load('play.png')
+pauseIcon = pygame.image.load('pause.png')
+stopIcon = pygame.image.load('stop.png')
+browseIcon = pygame.image.load('browse.png')
+
 pygame.display.set_icon(gameIcon)
 
 WHITE = (255, 255, 255)
@@ -34,21 +39,30 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
 
 
-def button(msg, x, y, w, h, ic, ac, action=None):
+def button(msg, x, y, w, h, ic, ac, action=None, img=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
-    if x+w > mouse[0] > x and y+h > mouse[1] > y:
-        pygame.draw.rect(screen, ac, (x, y, w, h))
 
-        if click[0] == 1 and action != None:
-            action()
+    if img != None:
+        if x+w > mouse[0] > x and y+h > mouse[1] > y:
+            screen.blit(img, (x, y))
+            if click[0] == 1 and action != None:
+                action()
+        else:
+            screen.blit(img, (x, y))
     else:
-        pygame.draw.rect(screen, ic, (x, y, w, h))
+        if x+w > mouse[0] > x and y+h > mouse[1] > y:
+            pygame.draw.rect(screen, ac, (x, y, w, h))
 
-    smallText = pygame.font.SysFont("helvetica", 20)
-    textSurf, textRect = text_objects(msg, smallText)
-    textRect.center = ((x+(w/2)), (y+(h/2)))
-    screen.blit(textSurf, textRect)
+            if click[0] == 1 and action != None:
+                action()
+        else:
+            pygame.draw.rect(screen, ic, (x, y, w, h))
+
+        smallText = pygame.font.SysFont("helvetica", 20)
+        textSurf, textRect = text_objects(msg, smallText)
+        textRect.center = ((x+(w/2)), (y+(h/2)))
+        screen.blit(textSurf, textRect)
 
 
 def progress_bar():
@@ -70,6 +84,7 @@ def progress_bar():
     progress = (timer/1000)/songLength
     pygame.draw.rect(screen, borderColor, (*barPos, *barSize), 1)
 
+    # set bar to zero length if stopped
     if timer == -1:
         innerPos = (barPos[0]+3, barPos[1]+3)
         innerSize = ((barSize[0]-6), barSize[1]-6)
@@ -159,28 +174,23 @@ while running:
     events = pygame.event.get()
     timer = pygame.mixer.music.get_pos() + timer_last*1000
 
-    # initialize buttons
-    play_button = button('play', 30, 30, 60, 30, GRAY, WHITE)
-    pause_button = button('pause', 100, 30, 60, 30, GRAY, WHITE)
-    stop_button = button('stop', 30, 80, 60, 30, GRAY, WHITE)
-    file_button = button('browse', 30, 150, 80, 30, GRAY, WHITE)
+    # buttons
+    play_button = button('play', 30, 20, 60, 30,
+                         GRAY, WHITE, play_song, playIcon)
+    pause_button = button('pause', 100, 20, 60,
+                          30, GRAY, WHITE, pause_song, pauseIcon)
+    stop_button = button('stop', 30, 80, 60, 30,
+                         GRAY, WHITE, stop_song, stopIcon)
+    file_button = button('browse', 100, 80, 80, 30,
+                         GRAY, WHITE, select_file, browseIcon)
+
+    # misc
     progress_bar()
     playtime()
     playing()
 
-    # input
+    # quit check
     for event in events:
-
-        # button input
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            play_button = button('play', 30, 30, 60, 30,
-                                 GRAY, WHITE, play_song)
-            pause_button = button('pause', 100, 30, 60,
-                                  30, GRAY, WHITE, pause_song)
-            stop_button = button('stop', 30, 80, 60, 30,
-                                 GRAY, WHITE, stop_song)
-            file_button = button('browse', 30, 150, 80, 30,
-                                 GRAY, WHITE, select_file)
 
         if event.type == pygame.QUIT:
 
