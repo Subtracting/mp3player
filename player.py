@@ -147,6 +147,20 @@ def set_volume(n):
             volume -= 0.1
             pygame.mixer.music.set_volume(volume)
 
+def volume_bar():
+    global volume
+    barPos = (575, 20)
+    barSize = (10, 70)
+    borderColor = (255, 255, 255)
+    barColor = (100, 100, 100)
+    progress = volume*10
+    innerPos = (barPos[0]+3, barPos[1]+3)
+    innerSize = ((barSize[0]-6), barSize[1]-6 * progress)
+    pygame.draw.rect(screen, borderColor, (*barPos, *barSize), 1)
+    if 1 < progress < 11:
+        pygame.draw.rect(screen, barColor, (*innerPos, *innerSize))
+
+
 def number_is_prime():
     global file
     song = MP3(file)
@@ -199,6 +213,7 @@ while running:
     playtime()
     number_is_prime()
     playing()
+    volume_bar()
 
     # quit check
     for event in pygame.event.get():
