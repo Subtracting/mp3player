@@ -35,6 +35,7 @@ GRAY = (100, 100, 100)
 file = 'unassigned'
 paused = False
 volume = 0.5
+new_timer = 0
 
 
 def text_objects(text, font):
@@ -171,8 +172,9 @@ else:
 
 # main loop
 while running:
-    global timer
+    global songLength
     screen.fill(BLACK)
+
     timer = pygame.mixer.music.get_pos() + timer_last*1000
 
     # buttons
@@ -217,10 +219,9 @@ while running:
             if volume_button_down.collidepoint(event.pos):
                 set_volume(0)
             if prog_loc.collidepoint(event.pos):
-                timer = ((event.pos[0]-250)/250) * songLength
                 try:
-                    pygame.mixer.music.play(1, timer)
-                    print("skipped to " + str(timer))
+                    timer_last = ((event.pos[0]-250)/250) * songLength
+                    pygame.mixer.music.play(1, timer_last)
                 except:
                     pass
 
