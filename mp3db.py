@@ -1,7 +1,5 @@
 import sqlite3
 
-from pygame.constants import KEYDOWN
-
 
 def create_connection(db_file):
     conn = None

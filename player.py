@@ -38,8 +38,11 @@ file = 'unassigned'
 paused = False
 volume = 0.5
 new_timer = 0
+<<<<<<< HEAD
+=======
 a_rep = 0
 b_rep = 0
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
 
 def text_objects(text, font):
@@ -162,6 +165,8 @@ def set_volume(n):
             volume -= 0.1
             pygame.mixer.music.set_volume(volume)
 
+<<<<<<< HEAD
+=======
 def volume_bar():
     global volume
     barPos = (575, 20)
@@ -207,6 +212,7 @@ def is_prime(n):
         if n%i==0:
             return False     
     return True
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
 running = True
 
@@ -281,11 +287,14 @@ while running:
                     pygame.mixer.music.play(1, timer_last)
                 except:
                     pass
+<<<<<<< HEAD
+=======
             if a_repeater.collidepoint(event.pos):
                 a_b_repeater_a(timer)
             if b_repeater.collidepoint(event.pos):
                 a_b_repeater_b(timer)
 
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
     pygame.display.update()
 
