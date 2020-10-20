@@ -37,8 +37,10 @@ GRAY = (100, 100, 100)
 file = 'unassigned'
 paused = False
 volume = 0.5
+new_timer = 0
 a_rep = 0
 b_rep = 0
+
 
 def text_objects(text, font):
     textSurface = font.render(text, True, WHITE)
@@ -50,6 +52,9 @@ def button(x, y, img=None):
 
 
 def progress_bar():
+    global songLength
+    global timer
+
     barPos = (250, 30)
     barSize = (250, 20)
     borderColor = (255, 255, 255)
@@ -79,6 +84,10 @@ def progress_bar():
         pygame.draw.rect(screen, barColor, (*innerPos, *innerSize))
 
 
+def progress_location():
+    return pygame.Rect(250, 30, 250, 20)
+
+
 def playtime():
     msg = str(datetime.timedelta(seconds=int(round(timer/1000))))
     if is_prime(int(round(timer/1000))):
@@ -88,6 +97,7 @@ def playtime():
     textSurf2, textRect2 = text_objects(msg, smallText2)
     textRect2.midleft = (250, 80)
     screen.blit(textSurf2, textRect2)
+
 
 def playing():
     msg = "playing song: " + str(str(file).split("/")[-1])
@@ -140,6 +150,7 @@ def select_file():
     number_is_prime()
     root.destroy()
 
+
 def set_volume(n):
     global volume
     if n == 1:
@@ -175,6 +186,8 @@ def a_b_repeater_b(n):
     b_rep = n
     pygame.mixer.music.play(1, int(float(a_rep)/1000))
 
+def timeroo():
+    timeroo = pygame.mixer.music.get_pos()
 
 def number_is_prime():
     global file
@@ -212,7 +225,9 @@ else:
 
 # main loop
 while running:
+    global songLength
     screen.fill(BLACK)
+
     timer = pygame.mixer.music.get_pos() + timer_last*1000
 
     # buttons
@@ -226,6 +241,7 @@ while running:
     b_repeater = button(270, 5, b_button)
 
     # misc
+    prog_loc = progress_location()
     progress_bar()
     playtime()
     number_is_prime()
@@ -259,6 +275,12 @@ while running:
                 set_volume(1)
             if volume_button_down.collidepoint(event.pos):
                 set_volume(0)
+            if prog_loc.collidepoint(event.pos):
+                try:
+                    timer_last = ((event.pos[0]-250)/250) * songLength
+                    pygame.mixer.music.play(1, timer_last)
+                except:
+                    pass
             if a_repeater.collidepoint(event.pos):
                 a_b_repeater_a(timer)
             if b_repeater.collidepoint(event.pos):
