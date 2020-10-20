@@ -25,6 +25,8 @@ stopIcon = pygame.image.load('stop.png')
 browseIcon = pygame.image.load('browse.png')
 volumeUp = pygame.image.load('volumeUp.png')
 volumeDown = pygame.image.load('volumeDown.png')
+a_button = pygame.image.load('a.png')
+b_button = pygame.image.load('b.png')
 
 pygame.display.set_icon(gameIcon)
 
@@ -36,6 +38,11 @@ file = 'unassigned'
 paused = False
 volume = 0.5
 new_timer = 0
+<<<<<<< HEAD
+=======
+a_rep = 0
+b_rep = 0
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
 
 def text_objects(text, font):
@@ -86,7 +93,10 @@ def progress_location():
 
 def playtime():
     msg = str(datetime.timedelta(seconds=int(round(timer/1000))))
-    smallText2 = pygame.font.SysFont("helvetica", 20)
+    if is_prime(int(round(timer/1000))):
+        smallText2 = pygame.font.SysFont("helvetica", 20, 1, 1)
+    else:
+        smallText2 = pygame.font.SysFont("helvetica", 20)
     textSurf2, textRect2 = text_objects(msg, smallText2)
     textRect2.midleft = (250, 80)
     screen.blit(textSurf2, textRect2)
@@ -140,20 +150,69 @@ def select_file():
         ("mp3 files", "*.mp3"), ("flac-elackjes", "*.flac"), ("All files", "*.*")))
     stop_song()
     play_song()
+    number_is_prime()
     root.destroy()
 
 
 def set_volume(n):
     global volume
     if n == 1:
-        if volume != 1.0:
+        if volume < 1.1:
             volume += 0.1
             pygame.mixer.music.set_volume(volume)
     if n == 0:
-        if volume != 0.0:
+        if volume > 0.1:
             volume -= 0.1
             pygame.mixer.music.set_volume(volume)
 
+<<<<<<< HEAD
+=======
+def volume_bar():
+    global volume
+    barPos = (575, 20)
+    barSize = (10, 70)
+    borderColor = WHITE
+    barColor = GRAY
+    progress = int(volume*10)
+    innerPos = (barPos[0]+3, barPos[1]+3)
+    innerSize = ((barSize[0]-6), barSize[1]-6 * progress)
+    pygame.draw.rect(screen, borderColor, (*barPos, *barSize), 1)
+    if 1 < progress < 11:
+        pygame.draw.rect(screen, barColor, (*innerPos, *innerSize))
+
+def a_b_repeater_a(n):
+    global a_rep
+    a_rep = n
+
+def a_b_repeater_b(n):
+    global a_rep
+    global b_rep
+    global timer
+    b_rep = n
+    pygame.mixer.music.play(1, int(float(a_rep)/1000))
+
+def timeroo():
+    timeroo = pygame.mixer.music.get_pos()
+
+def number_is_prime():
+    global file
+    song = MP3(file)
+    songLength = int(song.info.length)
+    if is_prime(songLength):
+        msg = ("Number is prime, yesss!")
+    else:
+        msg = ("Number is not prime, noooo!")
+    smallText2 = pygame.font.SysFont("helvetica", 10)
+    textSurf2, textRect2 = text_objects(msg, smallText2)
+    textRect2.midleft = (250, 135)
+    screen.blit(textSurf2, textRect2)
+
+def is_prime(n):
+    for i in range(2,int(n**0.5)+1):
+        if n%i==0:
+            return False     
+    return True
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
 running = True
 
@@ -184,12 +243,16 @@ while running:
     file_button = button(100, 80, browseIcon)
     volume_button_up = button(540, 20, volumeUp)
     volume_button_down = button(540, 60, volumeDown)
+    a_repeater = button(250, 5, a_button)
+    b_repeater = button(270, 5, b_button)
 
     # misc
     prog_loc = progress_location()
     progress_bar()
     playtime()
+    number_is_prime()
     playing()
+    volume_bar()
 
     # quit check
     for event in pygame.event.get():
@@ -224,6 +287,14 @@ while running:
                     pygame.mixer.music.play(1, timer_last)
                 except:
                     pass
+<<<<<<< HEAD
+=======
+            if a_repeater.collidepoint(event.pos):
+                a_b_repeater_a(timer)
+            if b_repeater.collidepoint(event.pos):
+                a_b_repeater_b(timer)
+
+>>>>>>> 38acd0cbc82a28e4d7a165dea46e97a8a6058b48
 
     pygame.display.update()
 
