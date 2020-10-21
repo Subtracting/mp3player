@@ -28,8 +28,6 @@ pygame.event.pump()
 
 pygame.display.set_icon(p.gameIcon)
 
-
-
 def playtime():
     msg = str(datetime.timedelta(seconds=int(round(timer/1000))))
     if pc.is_prime(int(round(timer/1000))):
@@ -50,18 +48,16 @@ def playing():
 
 running = True
 
-# check if to continue playing since last time
-last_time = read_rows(conn, 'lasttime')
+#check if to continue playing since last time
+last_time = read_rows(conn,'lasttime')
 
 if last_time != () and last_time[1] != 'unassigned' and last_time[0] != '-1':
     p.file = last_time[1]
     timer_last = int(float(last_time[0])/1000)
     pygame.mixer.music.load(p.file)
     pygame.mixer.music.play(1, timer_last)
-
 else:
     timer_last = 0
-
 
 # main loop
 while running:
