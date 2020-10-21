@@ -37,7 +37,9 @@ class PlayFunctions():
         PlayFunctions.stop_song()
         PlayFunctions.play_song()
         pc.number_is_prime()
-        db.insert_song(db.create_connection('mp3_db.sqlite'), str(p.file), 'test','songs')
+        song = MP3(p.file)
+        songLength = int(song.info.length)
+        db.insert_song(db.create_connection('mp3_db.sqlite'), str(p.file), songLength,'songs')
         root.destroy()
 
     def set_volume(n):
