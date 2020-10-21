@@ -33,15 +33,6 @@ def read_rows(conn, table):
     conn.commit()
     return rows[0]
 
-def song_exist(conn, filename, table):
-    sql = f'SELECT song_location FROM {table} where song_location = (?)'
-    params = (filename,)
-    cur = conn.cursor()
-    cur.execute(sql, params)
-    rows = cur.fetchall()
-    conn.commit()
-    return rows
-
 # CREATE TABLE songs (
 # 	song_id INTEGER PRIMARY KEY,
 # 	song_location TEXT,
