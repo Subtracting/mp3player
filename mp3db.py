@@ -1,23 +1,23 @@
 import sqlite3
 
-from pygame.constants import KEYDOWN
-
-
 def create_connection(db_file):
     conn = None
     conn = sqlite3.connect(db_file)
-
     return conn
-
 
 def insert_row(conn, timestamp, location, table):
     sql = f'INSERT INTO {table} (timestamp, location) values (?,?)'
     params = (timestamp, location)
     cur = conn.cursor()
     cur.execute(sql, params)
-
     conn.commit()
 
+def insert_song(conn, location, length, table):
+    sql = f'INSERT INTO {table} (song_location, song_length) values (?,?)'
+    params = (location, length)
+    cur = conn.cursor()
+    cur.execute(sql, params)
+    conn.commit()
 
 def clear_table(conn, table):
     sql = f'DELETE FROM {table}'
@@ -25,21 +25,25 @@ def clear_table(conn, table):
     cur.execute(sql)
     conn.commit()
 
-
 def read_rows(conn, table):
     sql = f"SELECT * FROM {table}"
     cur = conn.cursor()
     cur.execute(sql)
-
     rows = cur.fetchall()
-
     conn.commit()
-
     return rows[0]
 
-# create poopietable (
-#     keupoopie (INT) PRIMARY KEY,
-#     foreinkeymuziek = foreign key,
-#     genrer
+def song_exist(conn, filename, table):
+    sql = f'SELECT song_location FROM {table} where song_location = (?)'
+    params = (filename,)
+    cur = conn.cursor()
+    cur.execute(sql, params)
+    rows = cur.fetchall()
+    conn.commit()
+    return rows
 
-# )
+# CREATE TABLE songs (
+# 	song_id INTEGER PRIMARY KEY,
+# 	song_location TEXT,
+# 	song_length TEXT
+# );

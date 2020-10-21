@@ -1,7 +1,6 @@
 import pygame
 import tkinter
 from tkinter import filedialog
-from mp3db import *
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
 import datetime
@@ -9,23 +8,23 @@ import playfunctions
 import params
 import primecrime
 import layout
-
-# database connection
-conn = create_connection('mp3_db.sqlite')
+import mp3db
 
 #init playunctions & params
 pf = playfunctions.PlayFunctions
 p = params.Params
 pc = primecrime.PrimeCrime
 l = layout.Layout
+db = mp3db
+
+# database connection
+conn = db.create_connection('mp3_db.sqlite')
 
 # initialize pygame etc.
 pygame.init()
 pygame.mixer.init()
-
 pygame.display.set_caption('2 DA MAXXX')
 pygame.event.pump()
-
 pygame.display.set_icon(p.gameIcon)
 
 def playtime():
@@ -38,7 +37,6 @@ def playtime():
     textRect2.midleft = (250, 80)
     p.screen.blit(textSurf2, textRect2)
 
-
 def playing():
     msg = "playing song: " + str(str(p.file).split("/")[-1])
     smallText3 = pygame.font.SysFont("helvetica", 10)
@@ -49,7 +47,7 @@ def playing():
 running = True
 
 #check if to continue playing since last time
-last_time = read_rows(conn,'lasttime')
+last_time = db.read_rows(conn,'lasttime')
 
 if last_time != () and last_time[1] != 'unassigned' and last_time[0] != '-1':
     p.file = last_time[1]
@@ -90,7 +88,7 @@ while running:
 
             # write last known time when quitting
             clear_table(conn, 'lasttime')
-            insert_row(conn, timer, str(p.file), 'lasttime')
+            db.insert_row(conn, timer, str(p.file), 'lasttime')
 
             pygame.mixer.quit()
             running = False

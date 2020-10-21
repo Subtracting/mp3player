@@ -6,9 +6,9 @@ from tkinter import filedialog
 import time 
 import params
 import primecrime
+import mp3db
 
 class PlayFunctions():
-
     def play_song():
         if p.file != 'unassigned':
             if p.paused == False:
@@ -37,6 +37,7 @@ class PlayFunctions():
         PlayFunctions.stop_song()
         PlayFunctions.play_song()
         pc.number_is_prime()
+        db.insert_song(db.create_connection('mp3_db.sqlite'), str(p.file), 'test','songs')
         root.destroy()
 
     def set_volume(n):
@@ -83,3 +84,4 @@ class PlayFunctions():
 #init parameters
 p = params.Params
 pc = primecrime.PrimeCrime
+db = mp3db
