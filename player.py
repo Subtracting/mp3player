@@ -13,6 +13,12 @@ import layout
 # database connection
 conn = create_connection('mp3_db.sqlite')
 
+#init playunctions & params
+playf = playfunctions.PlayFunctions
+p = params.Params
+pc = primecrime.PrimeCrime
+l = layout.Layout
+
 # initialize pygame etc.
 pygame.init()
 pygame.mixer.init()
@@ -20,23 +26,7 @@ pygame.mixer.init()
 pygame.display.set_caption('2 DA MAXXX')
 pygame.event.pump()
 
-gameIcon = pygame.image.load('icon.png')
-playIcon = pygame.image.load('play.png')
-pauseIcon = pygame.image.load('pause.png')
-stopIcon = pygame.image.load('stop.png')
-browseIcon = pygame.image.load('browse.png')
-volumeUp = pygame.image.load('volumeUp.png')
-volumeDown = pygame.image.load('volumeDown.png')
-a_button = pygame.image.load('a.png')
-b_button = pygame.image.load('b.png')
-
-pygame.display.set_icon(gameIcon)
-
-#init playunctions & params
-playf = playfunctions.PlayFunctions
-p = params.Params
-pc = primecrime.PrimeCrime
-l = layout.Layout
+pygame.display.set_icon(p.gameIcon)
 
 
 
@@ -80,14 +70,14 @@ while running:
 
     timer = pygame.mixer.music.get_pos() + timer_last*1000
     # buttons
-    play_button = l.button(30, 20, playIcon)
-    pause_button = l.button(100, 20, pauseIcon)
-    stop_button = l.button(30, 80, stopIcon)
-    file_button = l.button(100, 80, browseIcon)
-    volume_button_up = l.button(540, 20, volumeUp)
-    volume_button_down = l.button(540, 60, volumeDown)
-    a_repeater = l.button(250, 5, a_button)
-    b_repeater = l.button(270, 5, b_button)
+    play_button = l.button(30, 20, p.playIcon)
+    pause_button = l.button(100, 20, p.pauseIcon)
+    stop_button = l.button(30, 80, p.stopIcon)
+    file_button = l.button(100, 80, p.browseIcon)
+    volume_button_up = l.button(540, 20, p.volumeUp)
+    volume_button_down = l.button(540, 60, p.volumeDown)
+    a_repeater = l.button(250, 5, p.a_button)
+    b_repeater = l.button(270, 5, p.b_button)
 
     # misc
     prog_loc = l.progress_location()

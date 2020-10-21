@@ -17,3 +17,14 @@ class Params:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GRAY = (100, 100, 100)
+
+    #images
+    gameIcon = pygame.image.load('icon.png')
+    playIcon = pygame.image.load('play.png')
+    pauseIcon = pygame.image.load('pause.png')
+    stopIcon = pygame.image.load('stop.png')
+    browseIcon = pygame.image.load('browse.png')
+    volumeUp = pygame.image.load('volumeUp.png')
+    volumeDown = pygame.image.load('volumeDown.png')
+    a_button = pygame.image.load('a.png')
+    b_button = pygame.image.load('b.png')
