@@ -14,7 +14,7 @@ import layout
 conn = create_connection('mp3_db.sqlite')
 
 #init playunctions & params
-playf = playfunctions.PlayFunctions
+pf = playfunctions.PlayFunctions
 p = params.Params
 pc = primecrime.PrimeCrime
 l = layout.Layout
@@ -85,7 +85,7 @@ while running:
     playtime()
     pc.number_is_prime()
     playing()
-    playf.volume_bar()
+    pf.volume_bar()
 
     # quit check
     for event in pygame.event.get():
@@ -103,17 +103,17 @@ while running:
 
             # If the button collides with the mouse position.
             if play_button.collidepoint(event.pos):
-                playf.play_song()
+                pf.play_song()
             if pause_button.collidepoint(event.pos):
-                playf.pause_song()
+                pf.pause_song()
             if stop_button.collidepoint(event.pos):
-                playf.stop_song()
+                pf.stop_song()
             if file_button.collidepoint(event.pos):
-                playf.select_file()
+                pf.select_file()
             if volume_button_up.collidepoint(event.pos):
-                playf.set_volume(1)
+                pf.set_volume(1)
             if volume_button_down.collidepoint(event.pos):
-                playf.set_volume(0)
+                pf.set_volume(0)
             if prog_loc.collidepoint(event.pos):
                 try:
                     timer_last = ((event.pos[0]-250)/250) * songLength
@@ -121,9 +121,9 @@ while running:
                 except:
                     pass
             if a_repeater.collidepoint(event.pos):
-                playf.a_b_repeater_a(timer)
+                pf.a_b_repeater_a(timer)
             if b_repeater.collidepoint(event.pos):
-                playf.a_b_repeater_b(timer)
+                pf.a_b_repeater_b(timer)
 
 
     pygame.display.update()
