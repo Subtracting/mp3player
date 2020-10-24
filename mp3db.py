@@ -38,8 +38,13 @@ def read_rows(conn, table):
     conn.commit()
     return rows[0]
 
-# CREATE TABLE songs (
-# 	song_id INTEGER PRIMARY KEY,
-# 	song_location TEXT,
-# 	song_length TEXT
-# );
+
+def create_table():
+    conn = create_connection('mp3_db.sqlite')
+    sql = f'CREATE TABLE songs (song_id INTEGER PRIMARY KEY, song_location TEXT, song_length TEXT);'
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+
+
+# create_table()

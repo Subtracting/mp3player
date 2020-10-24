@@ -1,6 +1,4 @@
 import pygame
-from mutagen.mp3 import MP3
-from mutagen.flac import FLAC
 import datetime
 import playfunctions
 import params
@@ -27,8 +25,8 @@ pygame.display.set_icon(p.gameIcon)
 
 
 def playtime():
-    msg = str(datetime.timedelta(seconds=int(round(timer/1000))))
-    if pc.is_prime(int(round(timer/1000))):
+    msg = str(datetime.timedelta(seconds=int(round(p.timer/1000))))
+    if pc.is_prime(int(round(p.timer/1000))):
         smallText2 = pygame.font.SysFont("helvetica", 20, 1, 1)
     else:
         smallText2 = pygame.font.SysFont("helvetica", 20)
@@ -52,21 +50,18 @@ last_time = db.read_rows(conn, 'lasttime')
 
 if last_time != () and last_time[1] != 'unassigned' and last_time[0] != '-1':
     p.file = last_time[1]
-    timer_last = int(float(last_time[0])/1000)
+    p.timer_last = int(float(last_time[0])/1000)
     pygame.mixer.music.load(p.file)
-    pygame.mixer.music.play(1, timer_last)
+    pygame.mixer.music.play(1, p.timer_last)
 else:
-    timer_last = 0
+    p.timer_last = 0
 
 # main loop
 while running:
-    global songLength
-    global volume
-    global timer
-
     p.screen.fill(p.BLACK)
 
-    timer = pygame.mixer.music.get_pos() + timer_last*1000
+    p.timer = pygame.mixer.music.get_pos() + p.timer_last*1000
+
     # buttons
     play_button = l.button(30, 20, p.playIcon)
     pause_button = l.button(100, 20, p.pauseIcon)
@@ -88,6 +83,8 @@ while running:
     playing()
     pf.volume_bar()
 
+    pf.get_songlength()
+
     # quit check
     for event in pygame.event.get():
 
@@ -95,7 +92,7 @@ while running:
 
             # write last known time when quitting
             db.clear_table(conn, 'lasttime')
-            db.insert_row(conn, timer, str(p.file), 'lasttime')
+            db.insert_row(conn, p.timer, str(p.file), 'lasttime')
 
             pygame.mixer.quit()
             running = False
@@ -117,18 +114,19 @@ while running:
                 pf.set_volume(0)
             if prog_loc.collidepoint(event.pos):
                 try:
-                    timer_last = ((event.pos[0]-250)/250) * p.songLength
-                    pygame.mixer.music.play(1, timer_last)
+                    p.timer_last = (
+                        (event.pos[0]-250)/250) * p.song_length
+                    pygame.mixer.music.play(-1, p.timer_last)
                 except:
                     pass
             if volume_loc.collidepoint(event.pos):
-                volume = abs(event.pos[1]-90)*(1/60)
-                pf.set_volume2(volume)
+                p.volume = abs(event.pos[1]-90)*(1/60)
+                pf.set_volume2(p.volume)
 
             if a_repeater.collidepoint(event.pos):
-                pf.a_b_repeater_a(timer)
+                pf.a_b_repeater_a(p.timer)
             if b_repeater.collidepoint(event.pos):
-                pf.a_b_repeater_b(timer)
+                pf.a_b_repeater_b(p.timer)
 
     pygame.display.update()
 
