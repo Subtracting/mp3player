@@ -52,6 +52,9 @@ class PlayFunctions():
                 p.volume -= 0.1
                 pygame.mixer.music.set_volume(p.volume)
 
+    def set_volume2(pos):
+        pygame.mixer.music.set_volume(pos)
+
     def volume_bar():
         barPos = (575, 20)
         barSize = (10, 70)

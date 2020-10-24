@@ -1,6 +1,8 @@
 import params
 import pygame
 from mutagen.mp3 import MP3
+from mutagen.flac import FLAC
+
 
 class Layout:
     def text_objects(text, font):
@@ -11,6 +13,8 @@ class Layout:
         return p.screen.blit(img, (x, y))
 
     def progress_bar():
+        global progress
+        global timer
         barPos = (250, 30)
         barSize = (250, 20)
         borderColor = (255, 255, 255)
@@ -41,5 +45,9 @@ class Layout:
 
     def progress_location():
         return pygame.Rect(250, 30, 250, 20)
+
+    def volume_location():
+        return pygame.Rect(575, 20, 10, 70)
+
 
 p = params.Params

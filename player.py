@@ -1,6 +1,4 @@
 import pygame
-import tkinter
-from tkinter import filedialog
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
 import datetime
@@ -26,10 +24,6 @@ pygame.mixer.init()
 pygame.display.set_caption('2 DA MAXXX')
 pygame.event.pump()
 pygame.display.set_icon(p.gameIcon)
-
-
-def volume_location():
-    return pygame.Rect(575, 20, 10, 70)
 
 
 def playtime():
@@ -67,6 +61,9 @@ else:
 # main loop
 while running:
     global songLength
+    global volume
+    global timer
+
     p.screen.fill(p.BLACK)
 
     timer = pygame.mixer.music.get_pos() + timer_last*1000
@@ -83,6 +80,9 @@ while running:
     # misc
     prog_loc = l.progress_location()
     l.progress_bar()
+
+    volume_loc = l.volume_location()
+
     playtime()
     pc.number_is_prime()
     playing()
@@ -94,7 +94,7 @@ while running:
         if event.type == pygame.QUIT:
 
             # write last known time when quitting
-            clear_table(conn, 'lasttime')
+            db.clear_table(conn, 'lasttime')
             db.insert_row(conn, timer, str(p.file), 'lasttime')
 
             pygame.mixer.quit()
@@ -117,13 +117,13 @@ while running:
                 pf.set_volume(0)
             if prog_loc.collidepoint(event.pos):
                 try:
-                    timer_last = ((event.pos[0]-250)/250) * songLength
+                    timer_last = ((event.pos[0]-250)/250) * p.songLength
                     pygame.mixer.music.play(1, timer_last)
                 except:
                     pass
             if volume_loc.collidepoint(event.pos):
                 volume = abs(event.pos[1]-90)*(1/60)
-                set_volume2(volume)
+                pf.set_volume2(volume)
 
             if a_repeater.collidepoint(event.pos):
                 pf.a_b_repeater_a(timer)
