@@ -14,7 +14,9 @@ class Params:
     new_timer = 0
     a_rep = 0
     b_rep = 0
-    # timer_last = 0
+    timer_last = 0
+    progress = 0
+    song_length = 0
 
     # colors
     WHITE = (255, 255, 255)

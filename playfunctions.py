@@ -3,12 +3,14 @@ from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
 import tkinter
 from tkinter import filedialog
-import time 
+import time
 import params
-import primecrime
+# import primecrime
 import mp3db
 
+
 class PlayFunctions():
+
     def play_song():
         if p.file != 'unassigned':
             if p.paused == False:
@@ -29,6 +31,17 @@ class PlayFunctions():
         p.timer = 0
         p.timer_last = 0
 
+    def get_songlength():
+        if p.file != 'unassigned':
+            try:
+                song = MP3(p.file)
+            except:
+                song = FLAC(p.file)
+
+            p.song_length = int(song.info.length)
+        else:
+            p.song_length = 0
+
     def select_file():
         root = tkinter.Tk()
         root.withdraw()
@@ -36,10 +49,9 @@ class PlayFunctions():
             ("mp3 files", "*.mp3"), ("flac-elackjes", "*.flac"), ("All files", "*.*")))
         PlayFunctions.stop_song()
         PlayFunctions.play_song()
-        pc.number_is_prime()
-        song = MP3(p.file)
-        songLength = int(song.info.length)
-        db.insert_song(db.create_connection('mp3_db.sqlite'), str(p.file), songLength,'songs')
+        # pc.number_is_prime()
+        db.insert_song(db.create_connection('mp3_db.sqlite'),
+                       str(p.file), p.song_length, 'songs')
         root.destroy()
 
     def set_volume(n):
@@ -60,11 +72,11 @@ class PlayFunctions():
         barSize = (10, 70)
         borderColor = (255, 255, 255)
         barColor = (100, 100, 100)
-        progress = int(p.volume*10)
+        progress_vol = int(p.volume*10)
         innerPos = (barPos[0]+3, barPos[1]+3)
-        innerSize = ((barSize[0]-6), barSize[1]-6 * progress)
+        innerSize = ((barSize[0]-6), barSize[1]-6 * progress_vol)
         pygame.draw.rect(p.screen, borderColor, (*barPos, *barSize), 1)
-        if 1 < progress < 11:
+        if 1 < progress_vol < 11:
             pygame.draw.rect(p.screen, barColor, (*innerPos, *innerSize))
 
     def a_b_repeater_a(n):
@@ -76,17 +88,18 @@ class PlayFunctions():
         print(repeat)
         #pygame.mixer.music.play(1, int(float(a_rep)/1000))
         pygame.mixer.music.set_pos(p.a_rep/1000)
-        #while pygame.mixer.music.get_busy():
+        # while pygame.mixer.music.get_busy():
         count = 0
         while count < 6:
             time.sleep(repeat)
             pygame.mixer.music.set_pos(p.a_rep/1000)
-            count+=1
+            count += 1
         pygame.mixer.music.stop()
         pygame.mixer.music.play()
         pygame.mixer.music.set_pos(p.b_rep/1000)
 
-#init parameters
+
+# init parameters
 p = params.Params
-pc = primecrime.PrimeCrime
+# pc = primecrime.PrimeCrime
 db = mp3db

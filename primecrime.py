@@ -1,14 +1,17 @@
 import params
 import pygame
 import layout
-from mutagen.mp3 import MP3
+import playfunctions
+
+pf = playfunctions.PlayFunctions
+p = params.Params
+l = layout.Layout
+
 
 class PrimeCrime:
 
     def number_is_prime():
-        song = MP3(p.file)
-        songLength = int(song.info.length)
-        if PrimeCrime.is_prime(songLength):
+        if PrimeCrime.is_prime(p.song_length):
             msg = ("Number is prime, yesss!")
         else:
             msg = ("Number is not prime, noooo!")
@@ -18,10 +21,7 @@ class PrimeCrime:
         p.screen.blit(textSurf2, textRect2)
 
     def is_prime(n):
-        for i in range(2,int(n**0.5)+1):
-            if n%i==0:
-                return False     
+        for i in range(2, int(n**0.5)+1):
+            if n % i == 0:
+                return False
         return True
-
-p = params.Params
-l = layout.Layout
