@@ -20,7 +20,7 @@ db = mp3db
 # database connection
 conn = db.create_connection('mp3_db.sqlite')
 
-# initialize pygame etc.
+# initialize pygame etc..
 pygame.init()
 pygame.mixer.init()
 pygame.display.set_caption('2 DA MAXXX')

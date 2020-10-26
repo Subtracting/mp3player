@@ -5,7 +5,7 @@ class Params:
     #screen
     screen_width, screen_height = (600, 150)
     screen = pygame.display.set_mode((screen_width, screen_height))
-
+ 
     #parameters
     file = 'unassigned'
     paused = False
