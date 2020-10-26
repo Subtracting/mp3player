@@ -1,9 +1,11 @@
 import sqlite3
 
+
 def create_connection(db_file):
     conn = None
     conn = sqlite3.connect(db_file)
     return conn
+
 
 def insert_row(conn, timestamp, location, table):
     sql = f'INSERT INTO {table} (timestamp, location) values (?,?)'
@@ -12,6 +14,7 @@ def insert_row(conn, timestamp, location, table):
     cur.execute(sql, params)
     conn.commit()
 
+
 def insert_song(conn, location, length, table):
     sql = f'INSERT INTO {table} (song_location, song_length) values (?,?)'
     params = (location, length)
@@ -19,11 +22,13 @@ def insert_song(conn, location, length, table):
     cur.execute(sql, params)
     conn.commit()
 
+
 def clear_table(conn, table):
     sql = f'DELETE FROM {table}'
     cur = conn.cursor()
     cur.execute(sql)
     conn.commit()
+
 
 def read_rows(conn, table):
     sql = f"SELECT * FROM {table}"
@@ -32,6 +37,17 @@ def read_rows(conn, table):
     rows = cur.fetchall()
     conn.commit()
     return rows[0]
+
+
+def create_table():
+    conn = create_connection('mp3_db.sqlite')
+    sql = f'CREATE TABLE songs (song_id INTEGER PRIMARY KEY, song_location TEXT, song_length TEXT);'
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+
+
+# create_table()
 
 # CREATE TABLE songs (
 # 	song_id INTEGER PRIMARY KEY,
